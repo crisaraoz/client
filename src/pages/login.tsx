@@ -1,95 +1,87 @@
-import { useEffect, useRef } from "react";
-import { useLogin } from "@refinedev/core";
-
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import { ThemedTitleV2 } from "@refinedev/mui";
+import styles from './styles.module.css';
+import netoLogo from "assets/netoLogo.svg"; 
+import { useNavigate } from "react-router";
+const ACCESS_NUMBER = 1234;
 
-import { CredentialResponse } from "../interfaces/google";
+interface LoginProps {
+    onLoginSuccess: () => void;
+}
 
-
-// Todo: Update your Google Client ID here
-const GOOGLE_CLIENT_ID = "1041339102270-e1fpe2b6v6u1didfndh7jkjmpcashs4f.apps.googleusercontent.com";
-
-export const Login: React.FC = () => {
-    const { mutate: login } = useLogin<CredentialResponse>();
-
-    const GoogleButton = (): JSX.Element => {
-        const divRef = useRef<HTMLDivElement>(null);
-
-        useEffect(() => {
-            if (
-                typeof window === "undefined" ||
-                !window.google ||
-                !divRef.current
-            ) {
-                return;
-            }
-
-            try {
-                window.google.accounts.id.initialize({
-                    ux_mode: "popup",
-                    client_id: GOOGLE_CLIENT_ID,
-                    callback: async (res: CredentialResponse) => {
-                        if (res.credential) {
-                            login(res);
-                        }
-                    },
-                });
-                window.google.accounts.id.renderButton(divRef.current, {
-                    theme: "filled_blue",
-                    size: "medium",
-                    type: "standard",
-                });
-            } catch (error) {
-                console.log(error);
-            }
-        }, []);
-
-        return <div ref={divRef} />;
+export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
+    const [inputUser, setInputUser] = useState('');
+    const [inputPassword, setInputPassword] = useState('');
+    const navigate = useNavigate();
+    const handleUserChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setInputUser(e.target.value);
+    };
+    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setInputPassword(e.target.value);
+    };
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        if (parseInt(inputUser, 10) === ACCESS_NUMBER && parseInt(inputPassword, 10) === ACCESS_NUMBER) {
+            onLoginSuccess();
+            navigate('/home');
+        } else {
+            console.log("Acceso denegado");
+        }
     };
 
+    const handleMouseOver = (e: React.MouseEvent<HTMLImageElement>) => {
+        e.currentTarget.style.filter = "drop-shadow(0 0 10px yellow)";
+    };
 
-    
-        return (
-            <Container
+    const handleMouseOut = (e: React.MouseEvent<HTMLImageElement>) => {
+        e.currentTarget.style.filter = "none";
+    };
+
+    return (
+        <Container
             style={{
                 height: "100vh",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                backgroundColor: "#ffffff"
             }}
-            >
+        >
             <Box
                 display="flex"
                 gap="36px"
                 justifyContent="center"
-                flexDirection="column"
+                flexDirection={{ xs: "column", sm: "row" }}
+                alignItems="center" 
             >
-                <ThemedTitleV2
-                collapsed={false}
-                wrapperStyles={{
-                    fontSize: "22px",
-                    justifyContent: "center",
-                }}
-                />
+                    <img
+                    className={styles.logo}
+                        style={{ padding: "0 5px", height: "280px", width: "280px" }}
+                        alt="Neto"
+                        src={netoLogo}
+                        onMouseOver={handleMouseOver}
+                        onMouseOut={handleMouseOut}
+                    />
 
-                <GoogleButton />
-
-                <Typography align="center" color={"text.secondary"} fontSize="12px">
-                Powered by
-          <img
-            style={{ padding: "0 5px" }}
-            alt="Google"
-            src="https://refine.ams3.cdn.digitaloceanspaces.com/superplate-auth-icons%2Fgoogle.svg"
-          />
-          Google
-                </Typography>
+                <div className={styles.loginBox}>
+                    <form onSubmit={handleSubmit}>
+                        <div className={styles.userBox}>
+                            <input type="text" onChange={handleUserChange} />
+                            <label>Usuario</label>
+                        </div>
+                        <div className={styles.userBox}>
+                            <input type="password" onChange={handlePasswordChange} />
+                            <label>Contraseña</label>
+                        </div><center>
+                        <button style={{backgroundColor: "transparent"}} type="submit">
+                            ENTRAR
+                        <span></span>
+                        </button>
+                        </center>
+                    </form>
+                </div>
             </Box>
-            </Container>
-        );
-
-
-
+        </Container>
+    );
 };

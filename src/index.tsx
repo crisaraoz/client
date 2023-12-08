@@ -15,8 +15,10 @@ const root = createRoot(container);
 
 root.render(
         <React.StrictMode>
-            
-                <App />
+            <div style={{backgroundColor: "white"}}>
+            <App />
+            </div>
+                
             
     </React.StrictMode>
 );
