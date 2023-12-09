@@ -1,21 +1,15 @@
-export interface PieChartProps {
-    title: string,
-    value: number,
-    series: Array<number>
-    colors: Array<string>
-}
 
 export interface DataType {
-    id: number;
+    id?: number;
     dni: number;
-    lastName: string;
-    firstName: string;
+    lastName?: string;
+    firstName?: string;
     email?: string;
     number: number;
     sede?: string;
-    active: string | null;
-    ultimaFechaDePago: Date;
-    proximoVencimiento: Date;
+    active?: string | null;
+    ultimaFechaDePago?: Date;
+    proximoVencimiento?: Date;
 }
 
 export interface ModalMember {

@@ -4,8 +4,6 @@ import Container from "@mui/material/Container";
 import styles from "./styles.module.css";
 import netoLogo from "assets/netoLogo.svg";
 import { useNavigate } from "react-router";
-const ACCESS_NUMBER = 1234;
-
 interface LoginProps {
   onLoginSuccess: () => void;
 }
@@ -22,16 +20,24 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputPassword(e.target.value);
   };
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (
-      parseInt(inputUser, 10) === ACCESS_NUMBER &&
-      parseInt(inputPassword, 10) === ACCESS_NUMBER
-    ) {
-      onLoginSuccess();
-      navigate("/home");
-    } else {
-      setErrorMessage("Alguno de los datos ingresados no es correcto.");
+  const handleSubmit = async(e: FormEvent) => {
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: inputUser, password: inputPassword }),
+      });
+      if (response.ok) {
+        onLoginSuccess();
+        navigate("/home");
+      } else {
+        setErrorMessage("Credenciales incorrectas o error en el servidor.");
+      }
+    } catch (error) {
+      console.error('Error durante el inicio de sesión:', error);
+      setErrorMessage("Error al conectarse al servidor.");
     }
   };
 
