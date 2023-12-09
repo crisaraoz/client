@@ -10,6 +10,7 @@ export interface DataType {
     dni: number;
     lastName: string;
     firstName: string;
+    email?: string;
     number: number;
     sede?: string;
     active: string | null;

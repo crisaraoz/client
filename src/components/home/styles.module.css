@@ -115,3 +115,9 @@
   top: 7px;
   right: 15px;
 }
+
+.textFieldGrouped{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}

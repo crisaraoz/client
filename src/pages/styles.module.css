@@ -1,3 +1,14 @@
+.errorMessage {
+  color: #ff6161; 
+  background-color: #fff3f3; 
+  border: 1px solid #ff6161; 
+  padding: 10px; 
+  margin-top: 20px; 
+  border-radius: 5px; 
+  text-align: center; 
+  font-size: 14px; 
+}
+
 .loginBox {
     width: 300px;
     padding: 40px;
